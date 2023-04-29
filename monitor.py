@@ -6,6 +6,7 @@ from PIL import Image
 import shutil
 import io
 
+
 CAPTURED_DIR = '/Users/cap/Documents/TestImages/POST/captured'
 IMAGE_DIR = '/Users/cap/Documents/TestImages/POST'
 URL = 'http://localhost:3000/predict'
