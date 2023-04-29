@@ -12,6 +12,29 @@ function getIngredients(ingredient) {
     return [{'name': 'Invalid', 'number': 0, 'quantity': 'item'}]
 }
 
+function getNutrition(meal) {
+    if (meal == "bangbang-chicken") return bangBangChickenNutrition
+
+    if (meal == "dan-dan-noodles") return danDanNoodlesnNutrition
+
+    if (meal == "twice-cooked-pork") return twiceCookedPorkNutrition
+
+    if (meal == "sichuan-hot-pot") return sichuanHotPotNutrition
+
+    if (meal == "wontons-in-chili-oil") return wontonsInChiliOilNutrition
+
+    return [{'name': 'Invalid', 'number': 0, 'quantity': 'item'}]
+}
+
+const bangBangChickenNutrition = [
+    {'name': 'calories', 'number': 301},
+    {'name': 'fat', 'number': 16},
+    {'name': 'protein', 'number': 20},
+    {'name': 'carbs', 'number': 21},
+    {'name': 'sodium', 'number': 0.99},
+    {'name': 'cholesterol', 'number': 0.046},
+]
+
 const bangBangChicken = [
     {'name': 'Chicken thigh', 'number': 600, 'quantity': 'grams'},
     {'name': 'ginger', 'number': 4, 'quantity': 'slices'},
@@ -25,6 +48,15 @@ const bangBangChicken = [
     {'name': 'sugar', 'number': 1, 'quantity': 'tsp'},
     {'name': 'red chili strips', 'number': 1, 'quantity': 'tbsp'},
     {'name': 'white sesame', 'number': 1, 'quantity': 'tsp'}
+]
+
+const danDanNoodlesnNutrition = [
+    {'name': 'calories', 'number': 392},
+    {'name': 'fat', 'number': 22},
+    {'name': 'protein', 'number': 12},
+    {'name': 'carbs', 'number': 38},
+    {'name': 'sodium', 'number': 0.201},
+    {'name': 'cholesterol', 'number': 0.051},
 ]
 
 const danDanNoodles = [
@@ -51,6 +83,15 @@ const danDanNoodles = [
     {'name': 'sliced scallions', 'number': 1, 'quantity': 'tbs'}
 ]
 
+const twiceCookedPorkNutrition = [
+    {'name': 'calories', 'number': 434},
+    {'name': 'fat', 'number': 26},
+    {'name': 'protein', 'number': 29},
+    {'name': 'carbs', 'number': 23},
+    {'name': 'sodium', 'number': 0.677},
+    {'name': 'cholesterol', 'number': 0.087},
+]
+
 const twiceCookedPork = [
     {'name': 'pork belly', 'number': 400, 'quantity': 'grams'},
     {'name': 'scallions', 'number': 2, 'quantity': 'pc'},
@@ -67,6 +108,15 @@ const twiceCookedPork = [
     {'name': 'leek', 'number': 2, 'quantity': 'pc'},
     {'name': 'small green bell pepper', 'number': 1, 'quantity': 'pc'},
     {'name': 'red chilies', 'number': 2, 'quantity': 'pc'}
+]
+
+const sichuanHotPotNutrition = [
+    {'name': 'calories', 'number': 622},
+    {'name': 'fat', 'number': 33},
+    {'name': 'protein', 'number': 46},
+    {'name': 'carbs', 'number': 35},
+    {'name': 'sodium', 'number': 2.18},
+    {'name': 'cholesterol', 'number': 46},
 ]
 
 const sichuanHotPot = [
@@ -94,6 +144,15 @@ const sichuanHotPot = [
     {'name': 'shoaling wine', 'number': 1, 'quantity': 'tbsp'},
     {'name': 'salt', 'number': 5, 'quantity': 'grams'},
     {'name': 'soup stock', 'number': 1000, 'quantity': 'milliliters'}
+]
+
+const wontonsInChiliOilNutrition = [
+    {'name': 'calories', 'number': 330},
+    {'name': 'fat', 'number': 14.4},
+    {'name': 'protein', 'number': 14.4},
+    {'name': 'carbs', 'number': 34.2},
+    {'name': 'sodium', 'number': 1.038},
+    {'name': 'cholesterol', 'number': 0.0552},
 ]
 
 const wontonsInChiliOil = [
@@ -127,4 +186,4 @@ const wontonsInChiliOil = [
     {'name': 'bay leaves', 'number': 3, 'quantity': 'pc'}
 ]
 
-module.exports = { getIngredients }
+module.exports = { getIngredients, getNutrition }

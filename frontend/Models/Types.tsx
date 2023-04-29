@@ -24,3 +24,8 @@ type PredictionData = {
     ada: Prediction,
     mlp: Prediction
 }
+
+type Nutrition = {
+    name: string,
+    number: number
+}

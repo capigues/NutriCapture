@@ -1,15 +1,40 @@
-import { useState } from 'react';
-import { Button, FlatList, Image, Platform, Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
+import { useState, useEffect } from 'react';
+import { Button, FlatList, Image, NativeModules, Platform, Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import * as ImageManipulator from 'expo-image-manipulator';
+import { io } from 'socket.io-client'
+
+const socket = io("http://localhost:3000")
 
 export default function App() {
   const [mealName, setMealName] = useState<string>('Prediction')
   const [ingredients, setIngredients] = useState<Ingredient[]>([])
+  const [nutrition, setNutrition] = useState<Nutrition[]>([])
   const [ingredient, setIngredient] = useState<string>('')
   const [image, setImage] = useState<string>()
   const [predictionADA, setPredictionsADA] = useState<Prediction>()
   const [predictionMLP, setPredictionsMLP] = useState<Prediction>()
+
+
+  socket.on('connect', () => {
+    console.log('Connecting')
+  })
+
+  socket.on("prediction", res => {
+    const {img64, pred_data} = res
+
+    setImage(img64)
+
+    setPredictionsADA({...pred_data[0].ada, prediction: formatTitle(pred_data[0].ada.prediction)})
+    setPredictionsMLP({...pred_data[0].mlp, prediction: formatTitle(pred_data[0].mlp.prediction)})
+    
+    getIngredients(pred_data[0].mlp.prediction)
+    setMealName(pred_data[0].mlp.prediction)
+  })
+
+  socket.on('disconnect', () => {
+    console.log('Disconnecting')
+  })
 
   const formatTitle = (title: string) => {
     return title.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')
@@ -51,6 +76,7 @@ export default function App() {
         setPredictionsMLP({...data[0].mlp, prediction: formatTitle(data[0].mlp.prediction)})
         
         getIngredients(data[0].mlp.prediction)
+        setMealName(data[0].mlp.prediction)
       })
       .catch(e => console.error(e))
   };
@@ -61,6 +87,17 @@ export default function App() {
     fetch(URL).then(res => res.json())
       .then(data => {
         setIngredients(data)
+
+        getNutrition(ingredient)
+      })
+  }
+
+  const getNutrition = async (meal: string) => {
+    const URL = 'http://localhost:3000/mealdata/' + meal
+
+    fetch(URL).then(res => res.json())
+      .then(data => {
+        setNutrition(data)
       })
   }
 
@@ -84,7 +121,7 @@ export default function App() {
 
   return (
     <View style={styles.container}>
-      { predictionADA && <Text style={styles.header}>ADA: {predictionADA.percentage}% {predictionADA.prediction}</Text> }
+      {/* { predictionADA && <Text style={styles.header}>ADA: {predictionADA.percentage}% {predictionADA.prediction}</Text>} */}
       { predictionMLP && <Text style={styles.header}>MLP: {predictionMLP.percentage}% {predictionMLP.prediction}</Text>}
       <View style={styles.image}>
         <Image source={{uri: image}} style={{width: 250, height: 250}}/>
@@ -99,7 +136,7 @@ export default function App() {
       </View>
       <View style={styles.nutrition}>
         <View style={styles.ingredients}>
-          <Text style={{...styles.header2, alignSelf: 'center'}}>Ingredients</Text>
+          <Text style={{...styles.header2, alignSelf: 'center', fontWeight: "800"}}>Ingredients {predictionMLP && mealName ? ': ' + mealName : null}</Text>
           <View style={{flexDirection: 'row'}}>
             <TextInput style={styles.input} placeholder='Add ingredient' value={ingredient} onChangeText={(text) => setIngredient(text)} />
             <Pressable style={{justifyContent: 'center', alignContent: 'center', flex: 1}} onPress={() => addIngredient(ingredient)}>
@@ -114,7 +151,13 @@ export default function App() {
           }}/>
         </View>
         <View style={styles.macronutrition}>
-          <Text style={{...styles.header2, alignSelf: 'center'}}>NutriFacts</Text>
+          <Text style={{...styles.header2, alignSelf: 'center', fontWeight: "800"}}>NutriFacts</Text>
+          <FlatList style={styles.list} data={nutrition} renderItem={(data) => {
+            return (<View style={{flex: 1, flexDirection: 'row', justifyContent: 'space-between', margin: 5}}>
+              <Text style={styles.macrotext}>{data.item.name}</Text>
+                <Text style={styles.macrotext}>{data.item.number}{data.item.name == "calories" ? '': 'g'}</Text>
+            </View>)
+          }}/>
         </View>
       </View>
     </View>
@@ -141,8 +184,9 @@ const styles = StyleSheet.create({
     marginBottom: 15,
   },
   text: {
-    fontSize: 16,
+    fontSize: 18,
     margin: 5,
+    fontWeight: "600",
   },
   input: {
     flex: 9,
@@ -186,5 +230,10 @@ const styles = StyleSheet.create({
     borderColor: 'black',
     borderWidth: 2,
     borderLeftWidth: 1,
+  },
+  macrotext: {
+    fontWeight: "600",
+    fontSize: 18,
+    margin: 5,
   }
 });

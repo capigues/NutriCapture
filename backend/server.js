@@ -4,8 +4,16 @@ const cors = require('cors')
 const fileUpload = require('express-fileupload');
 var base64Img = require('base64-img');
 const bodyParser = require('body-parser');
-const { getIngredients } = require('./food_data/food');
+const { getIngredients, getNutrition } = require('./food_data/food');
+const { createServer } = require('http');
+const { Server } = require("socket.io")
 const app = express()
+const httpServer = createServer(app)
+const io = new Server(httpServer, {
+    cors: {
+        origin: 'http://localhost:19006'
+    }
+})
 
 require("dotenv").config()
 const PORT = process.env.PORT || 3000
@@ -25,6 +33,12 @@ app.get('/classes', (req, res) => {
         4: 'twice-cooked-pork',
         5: 'wontons-in-chili-oil',
     })
+})
+
+app.get('/mealdata/:meal', (req, res) => {
+    const { meal } = req.params
+    let data = getNutrition(meal)
+    res.json(data)
 })
 
 app.get('/ingredients/:ingredient', (req, res) => {
@@ -70,6 +84,7 @@ app.post('/predict', (req, res) => {
     pythonProcess.on('exit', (code) => {
         if (code == 0) {
             console.log(pred_data)
+            io.emit("prediction", {img64: req.body.file, pred_data})
             res.status(200).json(pred_data)
         } else {
             console.log(pred_data['stderr'])
@@ -78,6 +93,14 @@ app.post('/predict', (req, res) => {
     });
 })
 
-app.listen(PORT, () => {
+io.on("connection", (socket) => {
+    console.log(socket.id)
+})
+
+httpServer.listen(PORT, () => {
     console.log('Listening on port:', PORT)
 })
+
+// app.listen(PORT, () => {
+//     console.log('Listening on port:', PORT)
+// })
