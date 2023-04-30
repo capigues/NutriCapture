@@ -5,7 +5,7 @@ import os
 
 #initialization of GPIO pins
 
-GPIO.setmode(GPIO.board) #reads the board and its corresponding pins
+GPIO.setmode(GPIO.BOARD) #reads the board and its corresponding pins
 GPIO.setup(12, GPIO.IN) #sets pin 12 as input pin
 
 GPIO.wait_for_edge(12, GPIO.rising)
