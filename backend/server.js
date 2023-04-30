@@ -11,14 +11,14 @@ const app = express()
 const httpServer = createServer(app)
 const io = new Server(httpServer, {
     cors: {
-        origin: 'http://localhost:19006'
+        origin: '*'
     }
 })
 
 require("dotenv").config()
 const PORT = process.env.PORT || 3000
 
-app.use(cors({origin: ['http://localhost:19000', 'http://localhost:19006']}))
+app.use(cors({origin: ['http://localhost:19000', 'http://localhost:19006', '*']}))
 app.use(bodyParser.json());
 app.use(fileUpload({
     tempFileDir: './uploads/',

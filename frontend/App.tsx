@@ -5,7 +5,9 @@ import * as ImageManipulator from 'expo-image-manipulator';
 import { io } from 'socket.io-client'
 
 const socketURL = 'http://' + window.location.hostname + ':3000'
-const socket = io(socketURL)
+const socket = io(socketURL, {
+  
+})
 
 export default function App() {
   const [mealName, setMealName] = useState<string>('Prediction')
