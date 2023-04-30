@@ -18,7 +18,7 @@ const io = new Server(httpServer, {
 require("dotenv").config()
 const PORT = process.env.PORT || 3000
 
-app.use(cors({origin: ['http://localhost:19000', 'http://localhost:19006', '*']}))
+app.use(cors())
 app.use(bodyParser.json());
 app.use(fileUpload({
     tempFileDir: './uploads/',
