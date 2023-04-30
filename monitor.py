@@ -36,7 +36,7 @@ def main():
                             new_path = os.path.join(CAPTURED_DIR, filename)
                             shutil.move(filepath, new_path)
                             print('Moved file', filename, 'to', CAPTURED_DIR)
-                            os.system('cd imgs && python3 ../ButtonPressFinal.py')
+                            os.system('python3 ButtonPressFinal.py')
                         else:
                             print(f'Failed to process {filename}')
         time.sleep(5)
