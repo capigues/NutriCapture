@@ -1,20 +1,9 @@
 #!/bin/bash
 
-cd backend
-
-npm install
-
-cd ../frontend
-
-npm install
-
-cd ..
-
-if command -v docker-compose &> /dev/null; then
-    docker-compose build
-    docker-compose up
-else
-    echo "docker-compose is not installed"
+if [ "$1" = "--build" ]; then
+    sudo docker build -t backend ./backend && sudo docker build -t frontend ./frontend
 fi
 
+sudo gnome-terminal -- bash -c 'sudo docker run --rm --name=backend -p 3000:3000 backend:latest' && sudo gnome-terminal -- bash -c 'sudo docker run --rm --name=frontend -p 19000:19000 -p 19006:19006 frontend:latest'
 
+python3 ButtonPressFINAL.py && python3 monitor.py

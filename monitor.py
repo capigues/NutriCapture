@@ -7,8 +7,8 @@ import shutil
 import io
 
 
-CAPTURED_DIR = '/Users/cap/Documents/TestImages/POST/captured'
-IMAGE_DIR = '/Users/cap/Documents/TestImages/POST'
+CAPTURED_DIR = './imgs/captured'
+IMAGE_DIR = './imgs'
 URL = 'http://localhost:3000/predict'
 
 def main():
@@ -36,6 +36,7 @@ def main():
                             new_path = os.path.join(CAPTURED_DIR, filename)
                             shutil.move(filepath, new_path)
                             print('Moved file', filename, 'to', CAPTURED_DIR)
+                            os.system('cd imgs && python3 ../ButtonPressFINAL.py')
                         else:
                             print(f'Failed to process {filename}')
         time.sleep(5)
