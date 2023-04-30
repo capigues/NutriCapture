@@ -19,7 +19,7 @@ def main():
                 with open(filepath, 'rb') as f:
                     with Image.open(f) as img:
                         #transform photo
-                        img = img.resize((250, 250), Image.Resampling.LANCZOS)
+                        img = img.resize((250, 250))
                         output = io.BytesIO()
                         img.save(output, format='JPEG', quality=50)
                         image_base64 = base64.b64encode(output.getvalue()).decode('utf-8')

@@ -4,8 +4,8 @@ import * as ImagePicker from 'expo-image-picker';
 import * as ImageManipulator from 'expo-image-manipulator';
 import { io } from 'socket.io-client'
 
-const socketURL = 'http://' + window.location.hostname + ':3000'
-const socket = io(socketURL, {
+const serverURL = 'http://' + window.location.hostname + ':3000'
+const socket = io(serverURL, {
   
 })
 
@@ -64,7 +64,7 @@ export default function App() {
 
   const getNutrifacts = () => {
     const base64Img = image
-    const URL = 'http://localhost:3000/predict'
+    const URL = serverURL + '/predict'
 
     fetch(URL, {
       body: JSON.stringify({'file': base64Img}),
@@ -85,7 +85,7 @@ export default function App() {
   };
 
   const getIngredients = async (ingredient: string) => {
-    const URL = 'http://localhost:3000/ingredients/' + ingredient
+    const URL = serverURL + '/ingredients/' + ingredient
 
     fetch(URL).then(res => res.json())
       .then(data => {
@@ -96,7 +96,7 @@ export default function App() {
   }
 
   const getNutrition = async (meal: string) => {
-    const URL = 'http://localhost:3000/mealdata/' + meal
+    const URL = serverURL + '/mealdata/' + meal
 
     fetch(URL).then(res => res.json())
       .then(data => {
