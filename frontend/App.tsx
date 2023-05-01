@@ -15,9 +15,17 @@ export default function App() {
   const [nutrition, setNutrition] = useState<Nutrition[]>([])
   const [ingredient, setIngredient] = useState<string>('')
   const [image, setImage] = useState<string>()
+  const [predictions, setPredictions] = useState<number[]>([])
   const [predictionADA, setPredictionsADA] = useState<Prediction>()
   const [predictionMLP, setPredictionsMLP] = useState<Prediction>()
 
+  const classes = {
+      0: 'bangbang-chicken',
+      1: 'dan-dan-noodles',
+      2: 'sichuan-hot-pot',
+      3: 'twice-cooked-pork',
+      4: 'wontons-in-chili-oil',
+  }
 
   socket.on('connect', () => {
     console.log('Connecting')
@@ -27,7 +35,8 @@ export default function App() {
     const {img64, pred_data} = res
 
     setImage(img64)
-
+    console.log(pred_data[0].mlp.raw_data)
+    setPredictions(pred_data[0].mlp.raw_data)
     setPredictionsADA({...pred_data[0].ada, prediction: formatTitle(pred_data[0].ada.prediction)})
     setPredictionsMLP({...pred_data[0].mlp, prediction: formatTitle(pred_data[0].mlp.prediction)})
     
@@ -124,8 +133,16 @@ export default function App() {
 
   return (
     <View style={styles.container}>
-      {/* { predictionADA && <Text style={styles.header}>ADA: {predictionADA.percentage}% {predictionADA.prediction}</Text>} */}
-      { predictionMLP && <Text style={styles.header}>MLP: {predictionMLP.percentage}% {predictionMLP.prediction}</Text>}
+      <View style={styles.predictions}>
+        {/* { predictionADA && <Text style={styles.header}>ADA: {predictionADA.percentage}% {predictionADA.prediction}</Text>} */}
+        { predictionMLP && <Text style={styles.header}>Prediction: {predictionMLP.percentage}% {predictionMLP.prediction}</Text>}
+        { predictionMLP &&
+          <View style={{flex: 1, alignItems: 'center'}}>
+            <Text style={{fontSize: 18, fontWeight: "600"}}> Other prediction data:</Text>
+            <FlatList data={predictions} renderItem={(data) => <Text>{Math.round(data.item * 100)}% {formatTitle(classes[data.index] as string)}</Text>}/>
+          </View>
+        }
+      </View>
       <View style={styles.image}>
         <Image source={{uri: image}} style={{width: 250, height: 250}}/>
       </View>
@@ -238,5 +255,8 @@ const styles = StyleSheet.create({
     fontWeight: "600",
     fontSize: 18,
     margin: 5,
+  },
+  predictions: {
+
   }
 });
