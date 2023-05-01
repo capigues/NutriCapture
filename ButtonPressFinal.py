@@ -15,7 +15,7 @@ GPIO.setmode(GPIO.BOARD) #reads the board and its corresponding pins
 GPIO.setwarnings(False)
 GPIO.setup(15, GPIO.IN) #sets pin 15 as input pin
 
-GPIO.add_event_detect(15, GPIO.RISING, callback=capture, bouncetime=250)
+GPIO.add_event_detect(15, GPIO.RISING, callback=capture, bouncetime=500)
 
 try:
     pause()
