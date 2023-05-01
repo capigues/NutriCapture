@@ -11,6 +11,8 @@ CAPTURED_DIR = './imgs/captured'
 IMAGE_DIR = './imgs'
 URL = 'http://localhost:3000/predict'
 
+print("Waiting on new photo...")
+
 def main():
     while True:
         for filename in os.listdir(IMAGE_DIR):
@@ -19,7 +21,7 @@ def main():
                 with open(filepath, 'rb') as f:
                     with Image.open(f) as img:
                         #transform photo
-                        img = img.resize((250, 250))
+                        img = img.resize((400, 400))
                         output = io.BytesIO()
                         img.save(output, format='JPEG', quality=50)
                         image_base64 = base64.b64encode(output.getvalue()).decode('utf-8')
@@ -36,10 +38,12 @@ def main():
                             new_path = os.path.join(CAPTURED_DIR, filename)
                             shutil.move(filepath, new_path)
                             print('Moved file', filename, 'to', CAPTURED_DIR)
-                            os.system('python3 ButtonPressFinal.py')
                         else:
                             print(f'Failed to process {filename}')
         time.sleep(5)
 
 if __name__ == '__main__':
-    main()
+    try:
+        main()
+    except KeyboardInterrupt:
+        exit(0)
