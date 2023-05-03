@@ -166,7 +166,7 @@ export default function App() {
           <FlatList style={styles.list} data={ingredients} renderItem={(data) => {
             return (<View style={{flex: 1, flexDirection: 'row', justifyContent: 'space-between', margin: 5}}>
               <Text style={styles.text}>{data.item.name}</Text>
-              <Button color={"red"} title="X" onPress={() => removeIngredient(data.item)}/>
+              <Button color={"green"} title="X" onPress={() => removeIngredient(data.item)}/>
             </View>)
           }}/>
         </View>
