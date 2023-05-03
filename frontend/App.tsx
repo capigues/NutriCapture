@@ -146,14 +146,14 @@ export default function App() {
       <View style={styles.image}>
         <Image source={{uri: image}} style={{width: 250, height: 250}}/>
       </View>
-      <View style={{flexDirection: 'row'}}>
+      {/* <View style={{flexDirection: 'row'}}>
         <Pressable style={styles.upload} onPress={pickImage}>
           <Text>Pick an image from camera roll</Text>
         </Pressable>
         <Pressable style={{...styles.upload, backgroundColor: 'black'}} onPress={() => getNutrifacts()}>
           <Text style={{color: 'white'}}>Get Nutrifacts</Text>
         </Pressable>
-      </View>
+      </View> */}
       <View style={styles.nutrition}>
         <View style={styles.ingredients}>
           <Text style={{...styles.header2, alignSelf: 'center', fontWeight: "800"}}>Ingredients {predictionMLP && mealName ? ': ' + mealName : null}</Text>
