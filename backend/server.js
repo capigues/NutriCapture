@@ -35,18 +35,6 @@ app.get('/classes', (req, res) => {
     })
 })
 
-app.get('/mealdata/:meal', (req, res) => {
-    const { meal } = req.params
-    let data = getNutrition(meal)
-    res.json(data)
-})
-
-app.get('/ingredients/:ingredient', (req, res) => {
-    const { ingredient } = req.params
-    let ingredients = getIngredients(ingredient)
-    res.json(ingredients)
-})
-
 app.post('/upload', (req, res) => {
     console.log(req.files)
 
@@ -83,9 +71,12 @@ app.post('/predict', (req, res) => {
 
     pythonProcess.on('exit', (code) => {
         if (code == 0) {
+            const ingredients = getIngredients(pred_data[0].mlp.prediction)
+            const nutrition = getNutrition(pred_data[0].mlp.prediction)
             console.log(pred_data)
-            io.emit("prediction", {img64: req.body.file, pred_data})
-            res.status(200).json(pred_data)
+            io.emit("prediction", {img64: req.body.file, pred_data, ingredients, nutrition}, () => {
+                res.status(200).json(pred_data)
+            })
         } else {
             console.log(pred_data['stderr'])
             res.status(400).json({message: "Python script error", error: pred_data['stderr']})
@@ -100,7 +91,3 @@ io.on("connection", (socket) => {
 httpServer.listen(PORT, () => {
     console.log('Listening on port:', PORT)
 })
-
-// app.listen(PORT, () => {
-//     console.log('Listening on port:', PORT)
-// })

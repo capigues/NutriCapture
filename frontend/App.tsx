@@ -32,16 +32,15 @@ export default function App() {
   })
 
   socket.on("prediction", res => {
-    const {img64, pred_data} = res
+    const {img64, pred_data, ingredients, nutrition} = res
 
     setImage(img64)
-    console.log(pred_data[0].mlp.raw_data)
     setPredictions(pred_data[0].mlp.raw_data)
     setPredictionsADA({...pred_data[0].ada, prediction: formatTitle(pred_data[0].ada.prediction)})
     setPredictionsMLP({...pred_data[0].mlp, prediction: formatTitle(pred_data[0].mlp.prediction)})
-    
-    getIngredients(pred_data[0].mlp.prediction)
     setMealName(pred_data[0].mlp.prediction)
+    setIngredients(ingredients)
+    setNutrition(nutrition)
   })
 
   socket.on('disconnect', () => {
@@ -82,36 +81,8 @@ export default function App() {
         'Accept': 'appliciation/json',
       },
       method: 'POST',
-    }).then(res => res.json())
-      .then(data => {
-        setPredictionsADA({...data[0].ada, prediction: formatTitle(data[0].ada.prediction)})
-        setPredictionsMLP({...data[0].mlp, prediction: formatTitle(data[0].mlp.prediction)})
-        
-        getIngredients(data[0].mlp.prediction)
-        setMealName(data[0].mlp.prediction)
-      })
-      .catch(e => console.error(e))
+    })
   };
-
-  const getIngredients = async (ingredient: string) => {
-    const URL = serverURL + '/ingredients/' + ingredient
-
-    fetch(URL).then(res => res.json())
-      .then(data => {
-        setIngredients(data)
-
-        getNutrition(ingredient)
-      })
-  }
-
-  const getNutrition = async (meal: string) => {
-    const URL = serverURL + '/mealdata/' + meal
-
-    fetch(URL).then(res => res.json())
-      .then(data => {
-        setNutrition(data)
-      })
-  }
 
   const addIngredient = (text: string) => {
     const data = {
@@ -156,7 +127,7 @@ export default function App() {
       </View> */}
       <View style={styles.nutrition}>
         <View style={styles.ingredients}>
-          <Text style={{...styles.header2, alignSelf: 'center', fontWeight: "800"}}>Ingredients {predictionMLP && mealName ? ': ' + mealName : null}</Text>
+          <Text style={{...styles.header2, alignSelf: 'center', fontWeight: "800"}}>Ingredients {predictionMLP && mealName ? ': ' + formatTitle(mealName) : null}</Text>
           <View style={{flexDirection: 'row'}}>
             <TextInput style={styles.input} placeholder='Add ingredient' value={ingredient} onChangeText={(text) => setIngredient(text)} />
             <Pressable style={{justifyContent: 'center', alignContent: 'center', flex: 1}} onPress={() => addIngredient(ingredient)}>
